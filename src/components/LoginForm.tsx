@@ -35,7 +35,7 @@ const LoginForm = ({ selectedRole, language, onBack, onLogin }: LoginFormProps) 
 
   const translations = {
     english: {
-      title: "Join Elephant Guard",
+      title: "Join Matriarch Together",
       subtitle: "Create your account to help protect communities and wildlife",
       login: "Already have an account?",
       loginButton: "Sign In",
@@ -62,7 +62,7 @@ const LoginForm = ({ selectedRole, language, onBack, onLogin }: LoginFormProps) 
       officialsDesc: "Monitor and coordinate responses"
     },
     hindi: {
-      title: "एलिफेंट गार्ड में शामिल हों",
+      title: "मैट्रिआर्क टुगेदर में शामिल हों",
       subtitle: "समुदायों और वन्यजीवों की सुरक्षा में मदद के लिए अपना खाता बनाएं",
       login: "पहले से खाता है?",
       loginButton: "साइन इन करें",
@@ -89,7 +89,7 @@ const LoginForm = ({ selectedRole, language, onBack, onLogin }: LoginFormProps) 
       officialsDesc: "निगरानी और प्रतिक्रिया समन्वय"
     },
     chhattisgarhi: {
-      title: "एलिफेंट गार्ड म शामिल होवव",
+      title: "मैट्रिआर्क टुगेदर म शामिल होवव",
       subtitle: "समुदाय अउ जंगली जानवर के सुरक्षा म मदद बर अपन खाता बनावव",
       login: "पहिली ले खाता हे?",
       loginButton: "साइन इन करव",
@@ -123,7 +123,7 @@ const LoginForm = ({ selectedRole, language, onBack, onLogin }: LoginFormProps) 
     e.preventDefault();
     toast({
       title: "Account Created Successfully!",
-      description: "Welcome to Elephant Guard Chhattisgarh",
+      description: "Welcome to Matriarch Together for Giants, Together for Life",
     });
     onLogin();
   };
@@ -151,7 +151,7 @@ const LoginForm = ({ selectedRole, language, onBack, onLogin }: LoginFormProps) 
           </Button>
           <div className="flex items-center gap-3">
             <img src={elephantIcon} alt="Elephant Icon" className="w-8 h-8" />
-            <h1 className="text-xl font-bold text-foreground">Elephant Guard</h1>
+            <h1 className="text-xl font-bold text-foreground">Matriarch Together</h1>
           </div>
         </div>
       </header>

@@ -16,7 +16,7 @@ const Index = () => {
 
   const translations = {
     english: {
-      title: "Elephant Guard Chhattisgarh",
+      title: "Matriarch Together for Giants, Together for Life",
       subtitle: "Protecting Communities, Preserving Wildlife",
       description: "Real-time elephant alerts, community reporting, and coordination tools to reduce human-elephant conflict across Chhattisgarh.",
       getStarted: "Get Started",
@@ -40,7 +40,7 @@ const Index = () => {
       communication: "Group Communication"
     },
     hindi: {
-      title: "एलिफेंट गार्ड छत्तीसगढ़",
+      title: "मैट्रिआर्क टुगेदर फॉर जाइंट्स, टुगेदर फॉर लाइफ",
       subtitle: "समुदायों की सुरक्षा, वन्यजीवों का संरक्षण",
       description: "छत्तीसगढ़ में मानव-हाथी संघर्ष को कम करने के लिए रियल-टाइम हाथी अलर्ट, सामुदायिक रिपोर्टिंग और समन्वय उपकरण।",
       getStarted: "शुरू करें",
@@ -64,7 +64,7 @@ const Index = () => {
       communication: "समूह संचार"
     },
     chhattisgarhi: {
-      title: "एलिफेंट गार्ड छत्तीसगढ़",
+      title: "मैट्रिआर्क टुगेदर फॉर जाइंट्स, टुगेदर फॉर लाइफ",
       subtitle: "समुदाय के रक्षा, जंगली जानवर के बचाव",
       description: "छत्तीसगढ़ म मनखे-हाथी के लड़ाई ल कम करे बर रियल-टाइम हाथी अलर्ट, समुदायिक रिपोर्टिंग अउ समन्वय के साधन।",
       getStarted: "सुरू करव",
