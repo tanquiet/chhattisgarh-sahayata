@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import ChhattisgarhMap from "./ChhattisgarhMap";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -427,13 +428,7 @@ const Dashboard = ({ selectedRole, language }: DashboardProps) => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="w-full h-96 bg-muted rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-muted-foreground">Interactive Map Coming Soon</p>
-                    <p className="text-sm text-muted-foreground">Real-time elephant locations and alert zones</p>
-                  </div>
-                </div>
+                <ChhattisgarhMap />
               </CardContent>
             </Card>
           </TabsContent>
