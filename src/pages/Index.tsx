@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertTriangle, Users, Shield, MapPin, MessageSquare, FileText, Eye, TreePine } from "lucide-react";
 import heroImage from "@/assets/hero-elephant.jpg";
-import elephantIcon from "@/assets/elephant-icon.png";
+import MatriarchLogo from "@/components/MatriarchLogo";
 import LoginForm from "@/components/LoginForm";
 import Dashboard from "@/components/Dashboard";
 
@@ -112,7 +112,7 @@ const Index = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <img src={elephantIcon} alt="Elephant Icon" className="w-8 h-8" />
+            <MatriarchLogo size="sm" />
             <h1 className="text-xl font-bold text-foreground">{t.title}</h1>
           </div>
           <Select value={language} onValueChange={setLanguage}>
@@ -309,7 +309,7 @@ const Index = () => {
       <footer className="bg-card border-t border-border py-8">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <img src={elephantIcon} alt="Elephant Icon" className="w-6 h-6" />
+            <MatriarchLogo size="sm" />
             <span className="font-semibold text-foreground">{t.title}</span>
           </div>
           <p className="text-muted-foreground">
