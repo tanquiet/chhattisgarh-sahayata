@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
 import { MapPin, AlertTriangle, Shield } from 'lucide-react';
 
 interface ElephantMarker {
   id: string;
-  coordinates: [number, number];
+  coordinates: [number, number]; // [x%, y%] relative to map container
   lastSeen: string;
   alertLevel: 'safe' | 'warning' | 'danger';
   herdSize: number;
@@ -15,16 +11,11 @@ interface ElephantMarker {
 }
 
 const ChhattisgarhMap = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [mapboxToken, setMapboxToken] = useState('');
-  const [isTokenSet, setIsTokenSet] = useState(false);
-
-  // Sample elephant markers for Chhattisgarh
+  // Sample elephant markers positioned on Chhattisgarh map (percentage coordinates)
   const elephantMarkers: ElephantMarker[] = [
     {
       id: '1',
-      coordinates: [81.8661, 21.2787], // Raipur area
+      coordinates: [45, 35], // Raipur area (center-south)
       lastSeen: '2 hours ago',
       alertLevel: 'warning',
       herdSize: 8,
@@ -32,7 +23,7 @@ const ChhattisgarhMap = () => {
     },
     {
       id: '2', 
-      coordinates: [83.2042, 23.2599], // Surguja area
+      coordinates: [75, 15], // Surguja area (north-east)
       lastSeen: '30 minutes ago',
       alertLevel: 'danger',
       herdSize: 12,
@@ -40,7 +31,7 @@ const ChhattisgarhMap = () => {
     },
     {
       id: '3',
-      coordinates: [81.2849, 19.0760], // Jagdalpur area
+      coordinates: [25, 75], // Jagdalpur area (south-west)
       lastSeen: '5 hours ago',
       alertLevel: 'safe',
       herdSize: 5,
@@ -48,7 +39,7 @@ const ChhattisgarhMap = () => {
     },
     {
       id: '4',
-      coordinates: [82.1409, 21.9739], // Bilaspur area
+      coordinates: [55, 25], // Bilaspur area (center-north)
       lastSeen: '1 hour ago',
       alertLevel: 'warning',
       herdSize: 6,
@@ -56,140 +47,128 @@ const ChhattisgarhMap = () => {
     },
     {
       id: '5',
-      coordinates: [80.9318, 20.7506], // Kondagaon area
+      coordinates: [35, 65], // Kondagaon area (center-south)
       lastSeen: '4 hours ago',
       alertLevel: 'safe',
       herdSize: 3,
       location: 'Kondagaon Forest'
+    },
+    {
+      id: '6',
+      coordinates: [65, 45], // Durg area (center-east)
+      lastSeen: '6 hours ago',
+      alertLevel: 'warning',
+      herdSize: 4,
+      location: 'Durg District'
     }
   ];
 
-  const handleTokenSubmit = () => {
-    if (mapboxToken.trim()) {
-      setIsTokenSet(true);
-      initializeMap();
+  const getAlertIcon = (alertLevel: string) => {
+    switch (alertLevel) {
+      case 'danger': 
+        return <AlertTriangle className="w-4 h-4 text-white" />;
+      case 'warning': 
+        return <Shield className="w-4 h-4 text-white" />;
+      case 'safe': 
+        return <MapPin className="w-4 h-4 text-white" />;
+      default: 
+        return <MapPin className="w-4 h-4 text-white" />;
     }
-  };
-
-  const initializeMap = () => {
-    if (!mapContainer.current || !mapboxToken) return;
-
-    mapboxgl.accessToken = mapboxToken;
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/satellite-streets-v12',
-      center: [81.8661, 21.2787], // Center on Chhattisgarh
-      zoom: 7,
-      pitch: 0,
-    });
-
-    // Add navigation controls
-    map.current.addControl(
-      new mapboxgl.NavigationControl(),
-      'top-right'
-    );
-
-    map.current.on('load', () => {
-      addElephantMarkers();
-    });
-  };
-
-  const addElephantMarkers = () => {
-    if (!map.current) return;
-
-    elephantMarkers.forEach((marker) => {
-      const el = document.createElement('div');
-      el.className = 'elephant-marker';
-      el.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(getMarkerSVG(marker.alertLevel))}")`;
-      el.style.width = '40px';
-      el.style.height = '40px';
-      el.style.backgroundSize = '100%';
-      el.style.cursor = 'pointer';
-
-      // Create popup
-      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <div class="p-3">
-          <div class="flex items-center gap-2 mb-2">
-            <div class="w-3 h-3 rounded-full ${getAlertColor(marker.alertLevel)}"></div>
-            <strong>${marker.location}</strong>
-          </div>
-          <p class="text-sm text-gray-600 mb-1">Herd Size: ${marker.herdSize} elephants</p>
-          <p class="text-sm text-gray-600 mb-1">Last Seen: ${marker.lastSeen}</p>
-          <p class="text-sm text-gray-600">Alert: ${marker.alertLevel.toUpperCase()}</p>
-        </div>
-      `);
-
-      new mapboxgl.Marker(el)
-        .setLngLat(marker.coordinates)
-        .setPopup(popup)
-        .addTo(map.current!);
-    });
-  };
-
-  const getMarkerSVG = (alertLevel: string) => {
-    const color = alertLevel === 'danger' ? '#ef4444' : alertLevel === 'warning' ? '#f59e0b' : '#22c55e';
-    return `
-      <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="20" r="18" fill="${color}" stroke="white" stroke-width="2"/>
-        <text x="20" y="26" text-anchor="middle" fill="white" font-family="Arial" font-size="16" font-weight="bold">🐘</text>
-      </svg>
-    `;
   };
 
   const getAlertColor = (alertLevel: string) => {
     switch (alertLevel) {
-      case 'danger': return 'bg-red-500';
-      case 'warning': return 'bg-yellow-500';
-      case 'safe': return 'bg-green-500';
-      default: return 'bg-gray-500';
+      case 'danger': return 'bg-red-500 border-red-600';
+      case 'warning': return 'bg-yellow-500 border-yellow-600';
+      case 'safe': return 'bg-green-500 border-green-600';
+      default: return 'bg-gray-500 border-gray-600';
     }
   };
 
-  if (!isTokenSet) {
-    return (
-      <div className="w-full h-96 bg-muted rounded-lg flex items-center justify-center">
-        <div className="text-center max-w-md p-6">
-          <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-4">Enter Mapbox Token</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            To display the Chhattisgarh elephant tracking map, please enter your Mapbox public token.
-            Get one at <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">mapbox.com</a>
-          </p>
-          <div className="space-y-3">
-            <Input
-              type="password"
-              placeholder="Enter Mapbox public token..."
-              value={mapboxToken}
-              onChange={(e) => setMapboxToken(e.target.value)}
-            />
-            <Button onClick={handleTokenSubmit} className="w-full">
-              Load Map
-            </Button>
+  return (
+    <div className="relative w-full h-96 bg-gradient-to-br from-green-50 to-green-100 rounded-lg overflow-hidden">
+      {/* Chhattisgarh Map Background */}
+      <div className="absolute inset-0">
+        <svg
+          viewBox="0 0 400 300"
+          className="w-full h-full"
+          style={{ filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.1))' }}
+        >
+          {/* Chhattisgarh state outline */}
+          <path
+            d="M 80 50 L 180 40 L 280 60 L 320 100 L 350 150 L 340 200 L 300 240 L 250 260 L 180 250 L 120 230 L 80 180 L 60 130 L 70 80 Z"
+            fill="rgba(34, 197, 94, 0.2)"
+            stroke="rgba(34, 197, 94, 0.6)"
+            strokeWidth="2"
+          />
+          
+          {/* Forest areas */}
+          <circle cx="100" cy="120" r="25" fill="rgba(22, 163, 74, 0.3)" />
+          <circle cx="200" cy="80" r="30" fill="rgba(22, 163, 74, 0.3)" />
+          <circle cx="270" cy="140" r="35" fill="rgba(22, 163, 74, 0.3)" />
+          <circle cx="160" cy="180" r="28" fill="rgba(22, 163, 74, 0.3)" />
+          <circle cx="250" cy="200" r="20" fill="rgba(22, 163, 74, 0.3)" />
+          
+          {/* Rivers */}
+          <path
+            d="M 150 60 Q 180 100 200 140 Q 220 180 240 220"
+            stroke="rgba(59, 130, 246, 0.4)"
+            strokeWidth="3"
+            fill="none"
+          />
+          <path
+            d="M 100 140 Q 140 160 180 180 Q 220 200 260 210"
+            stroke="rgba(59, 130, 246, 0.4)"
+            strokeWidth="2"
+            fill="none"
+          />
+        </svg>
+      </div>
+
+      {/* Elephant Markers */}
+      {elephantMarkers.map((marker) => (
+        <div
+          key={marker.id}
+          className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${getAlertColor(marker.alertLevel)} rounded-full p-2 border-2 shadow-lg cursor-pointer hover:scale-110 transition-transform group`}
+          style={{
+            left: `${marker.coordinates[0]}%`,
+            top: `${marker.coordinates[1]}%`,
+          }}
+        >
+          {getAlertIcon(marker.alertLevel)}
+          
+          {/* Tooltip */}
+          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+            <div className="text-sm font-semibold">{marker.location}</div>
+            <div className="text-xs text-gray-600">
+              Herd Size: {marker.herdSize} elephants
+            </div>
+            <div className="text-xs text-gray-600">
+              Last Seen: {marker.lastSeen}
+            </div>
+            <div className="text-xs font-medium" style={{ color: marker.alertLevel === 'danger' ? '#ef4444' : marker.alertLevel === 'warning' ? '#f59e0b' : '#22c55e' }}>
+              Alert: {marker.alertLevel.toUpperCase()}
+            </div>
+            {/* Arrow */}
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-white"></div>
           </div>
         </div>
-      </div>
-    );
-  }
+      ))}
 
-  return (
-    <div className="relative w-full h-96">
-      <div ref={mapContainer} className="absolute inset-0 rounded-lg shadow-lg" />
-      
       {/* Legend */}
       <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
         <h4 className="font-semibold text-sm mb-2">Alert Levels</h4>
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-red-500 rounded-full border border-red-600"></div>
             <span>Danger</span>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-yellow-500 rounded-full border border-yellow-600"></div>
             <span>Warning</span>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+            <div className="w-3 h-3 bg-green-500 rounded-full border border-green-600"></div>
             <span>Safe</span>
           </div>
         </div>
@@ -201,6 +180,12 @@ const ChhattisgarhMap = () => {
           <div className="text-lg font-bold text-primary">{elephantMarkers.length}</div>
           <div className="text-xs text-muted-foreground">Active Herds</div>
         </div>
+      </div>
+
+      {/* Map Title */}
+      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg">
+        <div className="text-sm font-semibold text-gray-700">Chhattisgarh</div>
+        <div className="text-xs text-gray-500">Elephant Tracking</div>
       </div>
     </div>
   );
